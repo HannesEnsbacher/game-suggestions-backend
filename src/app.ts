@@ -1,6 +1,6 @@
 import express, { Application } from 'express';
 import cors from 'cors';
-import gameRoutes from './routes/games';
+import gameRoutes from './routes/gameRoutes';
 
 const app: Application = express();
 
