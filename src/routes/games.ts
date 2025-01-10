@@ -1,14 +1,13 @@
 import { Router, Request, Response } from 'express';
-import { fetchPopularGames } from '../services/apiService';
+import { fetchGamesFromIgdb } from '../services/igdbService';
 
 const router: Router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const games = await fetchPopularGames();
+        const games = await fetchGamesFromIgdb();
         res.json(games);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: 'Failed to fetch games' });
     }
 });
