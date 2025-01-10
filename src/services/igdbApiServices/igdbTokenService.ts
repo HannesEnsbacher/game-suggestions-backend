@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { config } from '../config/config';
+import { config } from '../../config/config';
 
 const IGDB_AUTH_URL = 'https://id.twitch.tv/oauth2/token';
 let accessToken: string | null = null;
