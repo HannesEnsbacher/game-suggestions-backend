@@ -1,9 +1,20 @@
 import { Request, Response } from 'express';
-import { fetchGamesFromIgdb } from '../services/igdbApiServices/igdbService';
+import { searchGamesFromIgdb } from '../services/igdbApiServices/igdbService';
+import topGamesData from '../data/topGamesData';
 
-export const getGames = async (req: Request, res: Response) => {
+export const searchGames = async (req: Request, res: Response) => {
     try {
-        const games = await fetchGamesFromIgdb();
+        const searchString = req.query.searchString as string;
+        const games = await searchGamesFromIgdb(searchString);
+        res.json(games);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch games' });
+    }
+};
+
+export const getTopGames = async (req: Request, res: Response) => {
+    try {
+        const games = topGamesData;
         res.json(games);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch games' });
