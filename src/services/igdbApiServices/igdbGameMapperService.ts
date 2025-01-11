@@ -2,7 +2,7 @@ import { Game } from '../../models/Game';
 import { convertUnixToDate } from '../../utils/dateUtils';
 import { capitalizeTitle } from '../../utils/stringUtils';
 
-export const igdbGameToGame = async (igdbGame: any): Promise<Game> => {
+export const igdbGameToGame = (igdbGame: any): Game => {
     return {
         id: igdbGame['id'],
         name: igdbGame['name'],
@@ -26,10 +26,8 @@ export const igdbGameToGame = async (igdbGame: any): Promise<Game> => {
     };
 };
 
-export const igdbGamesToGames = async (
-    igdbGames: Object[],
-): Promise<Game[]> => {
-    return Promise.all(igdbGames.map((igdbGame) => igdbGameToGame(igdbGame)));
+export const igdbGamesToGames = (igdbGames: any[]): Game[] => {
+    return igdbGames.map((igdbGame) => igdbGameToGame(igdbGame));
 };
 
 const assembleKeywords = (
