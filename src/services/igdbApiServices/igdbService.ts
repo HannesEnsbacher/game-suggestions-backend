@@ -21,7 +21,7 @@ export const searchGamesFromIgdb = async (
         const response = await axios.post(
             `${IGDB_BASE_URL}/games`,
             `search "${searchString}"; ` +
-                `fields ${IGDB_SEARCH_FIELDS}; ` +
+                `fields ${IGDB_FIELDS}; ` + // TODO Decide if i am going to use the search fields or the normal fields (try with normal fields first and if it is too slow switch to search fields and change implementation accordingly)
                 `where category = 0 & total_rating_count > 30 & platforms = ${IGDB_PLATFORMS}; ` + // Platforms are Linux, PC, PS, PS3, Xbox, Mac, PS4, Xbox One, Switch, PS5, Xbox Series X in that order
                 'limit 6;',
             {
@@ -32,7 +32,7 @@ export const searchGamesFromIgdb = async (
             },
         );
         const games: Game[] = igdbGamesToGames(response.data);
-        gameCache.setMultiple(games);
+        //gameCache.setMultiple(games); TODO Decide if i am going to use the cache or not
         return games;
     } catch (error) {
         if (error.response) {
