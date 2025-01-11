@@ -12,8 +12,8 @@ export const fetchGamesFromIgdb = async (): Promise<Game[]> => {
         // noinspection JSAnnotator
         const response = await axios.post(
             `${IGDB_BASE_URL}/games`,
-            'fields id,name,genres.name,keywords.name,game_modes.name,player_perspectives.name,cover.image_id,first_release_date,total_rating,platforms.name; ' +
-                'where category = 0 & cover != null & total_rating_count > 50 & platforms = (3, 6, 7, 9 ,11, 14, 48, 49, 130, 167, 169); ' + // Platforms are Linux, PC, PS, PS3, Xbox, Mac, PS4, Xbox One, Switch, PS5, Xbox Series X in that order
+            'fields id,name,genres.name,keywords.name,game_modes.name,player_perspectives.name,themes.name,summary,cover.image_id,first_release_date,total_rating,platforms.name; ' +
+                'where category = 0 & cover != null & total_rating_count > 50 & platforms = (3, 6, 7, 9 ,11, 14, 48, 49, 130, 167, 169) & id =(135400, 1905, 115, 1372, 3212, 126459, 125174, 11198); ' + // Platforms are Linux, PC, PS, PS3, Xbox, Mac, PS4, Xbox One, Switch, PS5, Xbox Series X in that order
                 'sort total_rating desc; limit 10;',
             {
                 headers: {

@@ -1,5 +1,6 @@
 import { Game } from '../../models/Game';
 import { convertUnixToDate } from '../../utils/dateUtils';
+import { capitalizeTitle } from '../../utils/stringUtils';
 
 export const igdbGameToGame = async (igdbGame: any): Promise<Game> => {
     return {
@@ -14,10 +15,14 @@ export const igdbGameToGame = async (igdbGame: any): Promise<Game> => {
             igdbGame['game_modes'],
             igdbGame['player_perspectives'],
             igdbGame['keywords'],
+            igdbGame['themes'],
         ),
         platforms: igdbGame['platforms']
             ? igdbGame['platforms'].map((platform: any) => platform['name'])
             : [],
+        description: igdbGame['summary']
+            ? igdbGame['summary']
+            : 'No description available.',
     };
 };
 
@@ -32,6 +37,7 @@ const assembleKeywords = (
     game_modes: any[],
     player_perspectives: any[],
     keywords: any[],
+    themes: any[],
 ): string[] => {
     let keywordNames: string[] = [];
 
@@ -54,7 +60,12 @@ const assembleKeywords = (
     }
     if (keywords) {
         keywordNames = keywordNames.concat(
-            keywords.map((keyword) => keyword['name']),
+            keywords.map((keyword) => capitalizeTitle(keyword['name'])),
+        );
+    }
+    if (themes) {
+        keywordNames = keywordNames.concat(
+            themes.map((theme) => theme['name']),
         );
     }
 

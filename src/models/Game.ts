@@ -5,4 +5,5 @@ export interface Game {
     first_release_date: Date;
     keywords: string[];
     platforms: string[];
+    description?: string;
 }
