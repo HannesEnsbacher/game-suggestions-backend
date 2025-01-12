@@ -11,7 +11,7 @@ const IGDB_FIELDS =
 const IGDB_SEARCH_FIELDS = 'id,name,cover.image_id';
 const IGDB_PLATFORMS = '(3, 6, 7, 9 ,11, 14, 48, 49, 130, 167, 169)';
 
-const gameCache = GameCache.getInstance<Game>(); // TODO Think through if the cache is actually useful with how the user can interact in the frontend. Currently the only thing i can think could make sense is caching certain searchstrings and their results but that could unnecessarily bloat the cache
+const gameCache = GameCache.getInstance(); // TODO Think through if the cache is actually useful with how the user can interact in the frontend. Currently the only thing i can think could make sense is caching certain searchstrings and their results but that could unnecessarily bloat the cache
 
 export const searchGamesFromIgdb = async (
     searchString: string,
@@ -22,7 +22,7 @@ export const searchGamesFromIgdb = async (
             `${IGDB_BASE_URL}/games`,
             `search "${searchString}"; ` +
                 `fields ${IGDB_FIELDS}; ` + // TODO Decide if i am going to use the search fields or the normal fields (try with normal fields first and if it is too slow switch to search fields and change implementation accordingly)
-                `where category = 0 & total_rating_count > 30 & platforms = ${IGDB_PLATFORMS}; ` + // Platforms are Linux, PC, PS, PS3, Xbox, Mac, PS4, Xbox One, Switch, PS5, Xbox Series X in that order
+                `where category = 0 & total_rating_count > 10 & platforms = ${IGDB_PLATFORMS}; ` + // Platforms are Linux, PC, PS, PS3, Xbox, Mac, PS4, Xbox One, Switch, PS5, Xbox Series X in that order
                 'limit 6;',
             {
                 headers: {
