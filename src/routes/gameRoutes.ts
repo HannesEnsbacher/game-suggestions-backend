@@ -3,8 +3,8 @@ import { getTopGames, searchGames } from '../controllers/gameController';
 
 const router: Router = Router();
 
-router.get('/', searchGames);
+router.get('/search', searchGames);
 
-router.get('/topGames', getTopGames);
+router.get('/top-games', getTopGames);
 
 export default router;
