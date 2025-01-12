@@ -4,7 +4,7 @@ import topGamesData from '../data/topGamesData';
 
 export const searchGames = async (req: Request, res: Response) => {
     try {
-        const searchString = req.query.searchString as string;
+        const searchString = req.query.term as string;
         const games = await searchGamesFromIgdb(searchString);
         res.json(games);
     } catch (error) {
