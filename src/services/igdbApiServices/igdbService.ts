@@ -23,7 +23,7 @@ export const searchGamesFromIgdb = async (
             `search "${searchString}"; ` +
                 `fields ${IGDB_FIELDS}; ` + // TODO Decide if i am going to use the search fields or the normal fields (try with normal fields first and if it is too slow switch to search fields and change implementation accordingly)
                 `where category = 0 & total_rating_count > 10 & platforms = ${IGDB_PLATFORMS}; ` + // Platforms are Linux, PC, PS, PS3, Xbox, Mac, PS4, Xbox One, Switch, PS5, Xbox Series X in that order
-                'limit 6;',
+                'limit 6;', // TODO consider raising the limit, including total rating count and total rating and then sorting by total rating and giving the best 6 to frontend
             {
                 headers: {
                     'Client-ID': config.igdbClientId,
