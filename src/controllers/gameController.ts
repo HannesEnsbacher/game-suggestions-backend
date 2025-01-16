@@ -3,6 +3,7 @@ import { searchGamesFromIgdb } from '../services/igdbApiServices/igdbService';
 import topGamesData from '../data/topGamesData';
 
 export const searchGames = async (req: Request, res: Response) => {
+    console.log('Search Request received: ' + new Date(Date.now()));
     try {
         const searchString = req.query.term as string;
         const games = await searchGamesFromIgdb(searchString);

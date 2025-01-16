@@ -9,21 +9,21 @@ const IGDB_BASE_URL = 'https://api.igdb.com/v4';
 const IGDB_FIELDS =
     'id,name,cover.image_id,genres.name,keywords.name,game_modes.name,player_perspectives.name,themes.name,summary,first_release_date,platforms.name';
 const IGDB_SEARCH_FIELDS = 'id,name,cover.image_id';
-const IGDB_PLATFORMS = '(3, 6, 7, 9 ,11, 14, 48, 49, 130, 167, 169)';
+const IGDB_PLATFORMS = '(3, 6, 7, 9 ,11, 14, 48, 49, 130, 167, 169)'; // Platforms are Linux, PC, PS, PS3, Xbox, Mac, PS4, Xbox One, Switch, PS5, Xbox Series X in that order
 
 const gameCache = GameCache.getInstance(); // TODO Think through if the cache is actually useful with how the user can interact in the frontend. Currently the only thing i can think could make sense is caching certain searchstrings and their results but that could unnecessarily bloat the cache
 
 export const searchGamesFromIgdb = async (
     searchString: string,
 ): Promise<Game[]> => {
+    console.log('Searching for games with search string: ' + searchString);
     try {
         // noinspection JSAnnotator
         const response = await axios.post(
             `${IGDB_BASE_URL}/games`,
-            `search "${searchString}"; ` +
-                `fields ${IGDB_FIELDS}; ` + // TODO Decide if i am going to use the search fields or the normal fields (try with normal fields first and if it is too slow switch to search fields and change implementation accordingly)
-                `where category = 0 & total_rating_count > 10 & platforms = ${IGDB_PLATFORMS}; ` + // Platforms are Linux, PC, PS, PS3, Xbox, Mac, PS4, Xbox One, Switch, PS5, Xbox Series X in that order
-                'limit 6;', // TODO consider raising the limit, including total rating count and total rating and then sorting by total rating and giving the best 6 to frontend
+            `fields ${IGDB_FIELDS}; ` + // TODO Decide if i am going to use the search fields or the normal fields (try with normal fields first and if it is too slow switch to search fields and change implementation accordingly)
+                `where category = 0 & version_parent = null & platforms = ${IGDB_PLATFORMS} & ${buildSearchQuery(searchString)}; ` +
+                'limit 6; sort total_rating_count desc;',
             {
                 headers: {
                     'Client-ID': config.igdbClientId,
@@ -70,4 +70,19 @@ export const fetchTopGamesFromIgdb = async (): Promise<Game[]> => {
         }
         throw error;
     }
+};
+
+const buildSearchQuery = (searchString: string): string => {
+    // Preprocess user input
+    const sanitizedInput = searchString
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' '); // Remove special characters
+    const spaceSanitizedInput = sanitizedInput.replace(/\s+/g, ' '); // Remove multiple spaces
+    const terms = spaceSanitizedInput.split(' '); // Split on spaces
+
+    // Build query parts
+    const queryParts = terms.map((term) => `name ~ *"${term}"*`);
+    const fullPartQuery = queryParts.join(' & '); // Combine with AND
+
+    return `(name ~ *"${searchString}"* | (${fullPartQuery}))`;
 };
