@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import gameRoutes from './routes/gameRoutes';
+import suggestionRoutes from './routes/suggestionRoutes';
 
 const app: Application = express();
 
@@ -10,5 +11,6 @@ app.use(express.json());
 
 // Routes
 app.use('/api/games', gameRoutes);
+app.use('/api/suggest', suggestionRoutes);
 
 export default app;
