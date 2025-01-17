@@ -44,6 +44,38 @@ export const searchGamesFromIgdb = async (
     }
 };
 
+export const searchSuggestionsFromIgdb = async (
+    searchStrings: string[],
+): Promise<Game[]> => {
+    console.log('Searching for games with search string: ' + searchStrings);
+    try {
+        // noinspection JSAnnotator
+        const response = await axios.post(
+            `${IGDB_BASE_URL}/games`,
+            `fields ${IGDB_FIELDS}; ` +
+                `where category = 0 & version_parent = null & platforms = ${IGDB_PLATFORMS} & ${buildMultiGameSearchQuery(searchStrings)}; ` +
+                'limit 6; sort total_rating_count desc;',
+            {
+                headers: {
+                    'Client-ID': config.igdbClientId,
+                    Authorization: `Bearer ${await getIgdbToken()}`,
+                },
+            },
+        );
+        const games: Game[] = igdbGamesToGames(response.data);
+        return games;
+    } catch (error) {
+        if (error.response) {
+            console.error('Error fetching games:', error.response.data);
+        } else {
+            console.error('Error fetching games:', error);
+        }
+        throw error;
+    }
+};
+
+// TODO add a service to get the keywords and genres from the igdb api
+
 export const fetchTopGamesFromIgdb = async (): Promise<Game[]> => {
     try {
         // noinspection JSAnnotator
@@ -85,4 +117,14 @@ const buildSearchQuery = (searchString: string): string => {
     const fullPartQuery = queryParts.join(' & '); // Combine with AND
 
     return `(name ~ *"${searchString}"* | (${fullPartQuery}))`;
+};
+
+const buildMultiGameSearchQuery = (searchStrings: string[]): string => {
+    return (
+        '(' +
+        searchStrings
+            .map((searchString) => buildSearchQuery(searchString))
+            .join(' | ') +
+        ')'
+    );
 };
