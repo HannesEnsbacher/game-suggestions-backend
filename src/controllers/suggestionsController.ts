@@ -22,6 +22,7 @@ export const getSuggestions = async (req: Request, res: Response) => {
             (game: any) => new Game(game),
         );
         const games = await getSuggestionsFromOpenAi(gameHistory);
+        console.log('Found suggestions: ', games);
         res.json(games);
     } catch (error) {
         res.status(500).json({ error: 'Failed to get suggestions' });

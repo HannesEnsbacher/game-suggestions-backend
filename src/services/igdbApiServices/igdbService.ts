@@ -22,7 +22,7 @@ export const searchGamesFromIgdb = async (
         const response = await axios.post(
             `${IGDB_BASE_URL}/games`,
             `fields ${IGDB_FIELDS}; ` + // TODO Decide if i am going to use the search fields or the normal fields (try with normal fields first and if it is too slow switch to search fields and change implementation accordingly)
-                `where category = 0 & version_parent = null & platforms = ${IGDB_PLATFORMS} & ${buildSearchQuery(searchString)}; ` +
+                `where category = 0 & version_parent = null & platforms = ${IGDB_PLATFORMS} & ${buildNameSearchQuery(searchString)}; ` +
                 'limit 6; sort total_rating_count desc;',
             {
                 headers: {
@@ -45,16 +45,16 @@ export const searchGamesFromIgdb = async (
 };
 
 export const searchSuggestionsFromIgdb = async (
-    searchStrings: string[],
+    suggestions: any[],
 ): Promise<Game[]> => {
-    console.log('Searching for games with search string: ' + searchStrings);
+    console.log('Searching for suggested games: ' + suggestions);
     try {
         // noinspection JSAnnotator
         const response = await axios.post(
             `${IGDB_BASE_URL}/games`,
             `fields ${IGDB_FIELDS}; ` +
-                `where category = 0 & version_parent = null & platforms = ${IGDB_PLATFORMS} & ${buildMultiGameSearchQuery(searchStrings)}; ` +
-                'limit 6; sort total_rating_count desc;',
+                `where category = 0 & version_parent = null & platforms = ${IGDB_PLATFORMS} & ${buildMultiGameSearchQuery(suggestions)}; ` +
+                'sort total_rating_count desc; limit 9;',
             {
                 headers: {
                     'Client-ID': config.igdbClientId,
@@ -66,9 +66,9 @@ export const searchSuggestionsFromIgdb = async (
         return games;
     } catch (error) {
         if (error.response) {
-            console.error('Error fetching games:', error.response.data);
+            console.error('Error fetching games:', error.response);
         } else {
-            console.error('Error fetching games:', error);
+            console.error('General Error fetching games:', error);
         }
         throw error;
     }
@@ -104,7 +104,7 @@ export const fetchTopGamesFromIgdb = async (): Promise<Game[]> => {
     }
 };
 
-const buildSearchQuery = (searchString: string): string => {
+const buildNameSearchQuery = (searchString: string): string => {
     // Preprocess user input
     const sanitizedInput = searchString
         .toLowerCase()
@@ -119,12 +119,32 @@ const buildSearchQuery = (searchString: string): string => {
     return `(name ~ *"${searchString}"* | (${fullPartQuery}))`;
 };
 
-const buildMultiGameSearchQuery = (searchStrings: string[]): string => {
+const buildSuggestionNameSearchQuery = (searchString: string): string => {
+    return `(name ~ "${searchString}")`;
+};
+
+const buildMultiGameSearchQuery = (suggestions: any[]): string => {
     return (
         '(' +
-        searchStrings
-            .map((searchString) => buildSearchQuery(searchString))
+        suggestions
+            .map(
+                (suggestion) => buildSuggestionNameSearchQuery(suggestion.name),
+                // '& ' +
+                // buildYearSearchQuery(suggestion.release_year),
+            )
             .join(' | ') +
         ')'
     );
+};
+
+const buildYearSearchQuery = (year: number): string => {
+    return `(first_release_date >= ${getYearStartUnixDate(year)} & first_release_date <= ${getYearEndUnixDate(year)})`;
+};
+
+const getYearEndUnixDate = (year: number): number => {
+    return Math.floor(new Date(year, 12, 31).getTime() / 1000);
+};
+
+const getYearStartUnixDate = (year: number): number => {
+    return Math.floor(new Date(year, 1, 1).getTime() / 1000);
 };
