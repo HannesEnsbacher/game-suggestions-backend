@@ -41,34 +41,42 @@ const assembleKeywords = (
 
     if (genres) {
         keywordNames = keywordNames.concat(
-            genres.map((genre) => genre['name']),
+            getFirst15Elements(genres).map((genre) => genre['name']),
         );
     }
     if (game_modes) {
         keywordNames = keywordNames.concat(
-            game_modes.map((game_mode) => game_mode['name']),
+            getFirst15Elements(game_modes).map(
+                (game_mode) => game_mode['name'],
+            ),
         );
     }
     if (player_perspectives) {
         keywordNames = keywordNames.concat(
-            player_perspectives.map(
+            getFirst15Elements(player_perspectives).map(
                 (player_perspective) => player_perspective['name'],
             ),
         );
     }
     if (keywords) {
         keywordNames = keywordNames.concat(
-            keywords.map((keyword) => capitalizeTitle(keyword['name'])),
+            getFirst15Elements(keywords).map((keyword) =>
+                capitalizeTitle(keyword['name']),
+            ),
         );
     }
     if (themes) {
         keywordNames = keywordNames.concat(
-            themes.map((theme) => theme['name']),
+            getFirst15Elements(themes).map((theme) => theme['name']),
         );
     }
 
     return keywordNames;
 };
+
+function getFirst15Elements<T>(array: T[]): T[] {
+    return array.slice(0, 15);
+}
 
 const assembleCoverUrl = (imageId: string): string => {
     return `https://images.igdb.com/igdb/image/upload/t_cover_big/${imageId}.jpg`;
