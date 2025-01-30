@@ -43,9 +43,7 @@ const PROMPT =
 export const getSuggestionsFromOpenAi = async (
     gameHistory: Game[],
 ): Promise<Game[]> => {
-    console.log(
-        'Getting Suggestions for game history: ' + JSON.stringify(gameHistory),
-    );
+    console.log('Getting Suggestions for game history: ', gameHistory);
     const messageText = JSON.stringify(
         gameHistory.map((game) => {
             return {
