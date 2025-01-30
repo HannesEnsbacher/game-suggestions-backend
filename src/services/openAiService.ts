@@ -26,18 +26,16 @@ const PROMPT =
     '- Select games that align with identified patterns and preferences.\n   ' +
     '- Ensure these games have a strong active player base and are popular among players.\n\n' +
     '4. **Provide Results:**\n   ' +
-    "- For each of the 6 game suggestions, include the game name, release year, and a reasoning considering the user's preferences and the game's current popularity.\n\n" +
+    "- For each of the 6 game suggestions, include the game name and release year considering the user's preferences and the game's current popularity.\n\n" +
     '- **Note:** Do not suggest any games that are already on the list of provided games.\n\n' +
     '# Output Format\n\n' +
     'The output should be a JSON object containing six game suggestions, each with the following fields:\n' +
     '- `name`: The name of the suggested game.\n' +
     '- `release_year`: The release year of the suggested game.\n' +
-    "- `reasoning`: A short explanation of why this game is suggested, based on the user's gaming history.\n\n" +
     'Example JSON structure:\n' +
-    '```json\n{\n  "suggestions": [\n    {\n      "name": "Game Title 1",\n      "release_year": 2020,\n      "reasoning": "This game is suggested because it features the same immersive world-building and strategic gameplay that you enjoyed in XYZ game, and it has a large active community."\n    },\n    {\n      "name": "Game Title 2",\n      "release_year": 2018,\n      "reasoning": "This game aligns with your love for adventure themes and open-world exploration, much like your previous favorite, ABC game. It is also highly popular among players currently."\n    }\n    // Additional suggestions...\n  ]\n}\n```\n\n' +
+    '```json\n{\n  "suggestions": [\n    {\n      "name": "Game Title 1",\n      "release_year": 2020\n      },\n    {\n      "name": "Game Title 2",\n      "release_year": 2018\n      }\n    // Additional suggestions...\n  ]\n}\n```\n\n' +
     '# Notes\n\n' +
-    "- Ensure the reasoning for each suggestion is unique and directly relates the suggestion back to the user's preferences and gaming patterns.\n" +
-    '- Make sure that you do not include too many similar games in your response.Avoid suggesting different versions of the same game and avoid games that are extremely similar but from a different company.\n' +
+    '- Make sure that you do not include too many similar games in your response. Avoid suggesting different versions of the same game and avoid games that are extremely similar but from a different company.\n' +
     '- Focus on the engagement levels and active players of the suggested games, ensuring they are well-regarded in the gaming community for these metrics.\n' +
     '- Do not suggest any expansion or alternate versions to games that were already played. Only include main games in your suggestions.\n' +
     '- Do not include games that are already on the list of provided games.';
@@ -93,21 +91,12 @@ export const getSuggestionsFromOpenAi = async (
                                 type: 'array',
                                 items: {
                                     type: 'object',
-                                    required: [
-                                        'name',
-                                        'release_year',
-                                        'reasoning',
-                                    ],
+                                    required: ['name', 'release_year'],
                                     properties: {
                                         name: {
                                             type: 'string',
                                             description:
                                                 'The name of the suggestion.',
-                                        },
-                                        reasoning: {
-                                            type: 'string',
-                                            description:
-                                                'The reasoning behind the suggestion.',
                                         },
                                         release_year: {
                                             type: 'number',
