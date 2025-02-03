@@ -6,6 +6,7 @@ const requiredEnvVars = [
     'PORT',
     'IGDB_CLIENT_ID',
     'IGDB_CLIENT_SECRET',
+    'OPENAI_API_KEY',
 ] as const;
 
 requiredEnvVars.forEach((key) => {
@@ -19,4 +20,5 @@ export const config = {
     port: Number(process.env.PORT),
     igdbClientId: process.env.IGDB_CLIENT_ID!,
     igdbClientSecret: process.env.IGDB_CLIENT_SECRET!,
+    openAiApiKey: process.env.OPENAI_API_KEY!,
 };

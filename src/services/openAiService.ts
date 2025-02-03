@@ -2,9 +2,10 @@ import { Game } from '../models/Game';
 
 import OpenAI from 'openai';
 import { searchSuggestionsFromIgdb } from './igdbApiServices/igdbService';
+import { config } from '../config/config';
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: config.openAiApiKey,
 });
 
 const PROMPT =
