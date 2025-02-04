@@ -35,10 +35,14 @@ export const searchGamesFromIgdb = async (
         //gameCache.setMultiple(games); TODO Decide if i am going to use the cache or not
         return games;
     } catch (error) {
-        if (error.response) {
-            console.error('Error fetching games:', error.response.data);
+        if (error instanceof Error) {
+            if (error.message) {
+                console.error('Error fetching games:', error.message);
+            } else {
+                console.error('Error fetching games:', error);
+            }
         } else {
-            console.error('Error fetching games:', error);
+            console.error('An unknown error occurred:', error);
         }
         throw error;
     }
@@ -65,10 +69,14 @@ export const searchSuggestionsFromIgdb = async (
         const games: Game[] = igdbGamesToGames(response.data);
         return games;
     } catch (error) {
-        if (error.response) {
-            console.error('Error fetching games:', error.response);
+        if (error instanceof Error) {
+            if (error.message) {
+                console.error('Error fetching games:', error.message);
+            } else {
+                console.error('General Error fetching games:', error);
+            }
         } else {
-            console.error('General Error fetching games:', error);
+            console.error('An unknown error occurred:', error);
         }
         throw error;
     }
@@ -95,10 +103,14 @@ export const fetchTopGamesFromIgdb = async (): Promise<Game[]> => {
         console.log(games);
         return games;
     } catch (error) {
-        if (error.response) {
-            console.error('Error fetching games:', error.response.data);
+        if (error instanceof Error) {
+            if (error.message) {
+                console.error('Error fetching games:', error.message);
+            } else {
+                console.error('Error fetching games:', error);
+            }
         } else {
-            console.error('Error fetching games:', error);
+            console.error('An unknown error occurred:', error);
         }
         throw error;
     }

@@ -140,10 +140,14 @@ export const getSuggestionsFromOpenAi = async (
 
         return await searchSuggestionsFromIgdb(suggestions);
     } catch (error) {
-        if (error.response) {
-            console.error('Error fetching games:', error.response.data);
+        if (error instanceof Error) {
+            if (error.message) {
+                console.error('Error fetching games:', error.message);
+            } else {
+                console.error('Error fetching games:', error);
+            }
         } else {
-            console.error('Error fetching games:', error);
+            console.error('An unknown error occurred:', error);
         }
         throw error;
     }
