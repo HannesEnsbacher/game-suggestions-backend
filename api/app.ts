@@ -1,4 +1,3 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
 import express, { Application } from 'express';
 import cors from 'cors';
 import gameRoutes from './routes/gameRoutes';
@@ -14,7 +13,4 @@ app.use(express.json());
 app.use('/api/games', gameRoutes);
 app.use('/api/suggest', suggestionRoutes);
 
-// Export a single serverless function
-export default function handler(req: VercelRequest, res: VercelResponse) {
-    return app(req, res);
-}
+export default app;
