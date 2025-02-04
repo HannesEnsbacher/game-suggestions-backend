@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { config } from '../../config/config';
 
+const IGDB_CLIENT_ID = process.env.IGDB_CLIENT_ID;
+const IGDB_CLIENT_SECRET = process.env.IGDB_CLIENT_SECRET;
 const IGDB_AUTH_URL = 'https://id.twitch.tv/oauth2/token';
 let accessToken: string | null = null;
 let tokenExpiration: number | null = null;
@@ -14,8 +15,8 @@ export const getIgdbToken = async (): Promise<string> => {
         tokenExpiration = null;
 
         const response = await axios.post(`${IGDB_AUTH_URL}`, {
-            client_id: config.igdbClientId,
-            client_secret: config.igdbClientSecret,
+            client_id: IGDB_CLIENT_ID,
+            client_secret: IGDB_CLIENT_SECRET,
             grant_type: 'client_credentials',
         });
         accessToken = response.data.access_token;

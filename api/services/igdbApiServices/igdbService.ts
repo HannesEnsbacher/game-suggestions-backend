@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { config } from '../../config/config';
 import { getIgdbToken } from './igdbTokenService';
 import { Game } from '../../models/Game';
 import { igdbGamesToGames } from './igdbGameMapperService';
 import GameCache from '../gameCachingService';
 
+const IGDB_CLIENT_ID = process.env.IGDB_CLIENT_ID;
 const IGDB_BASE_URL = 'https://api.igdb.com/v4';
 const IGDB_FIELDS =
     'id,name,cover.image_id,genres.name,keywords.name,game_modes.name,player_perspectives.name,themes.name,summary,first_release_date,platforms.name';
@@ -26,7 +26,7 @@ export const searchGamesFromIgdb = async (
                 'limit 6; sort total_rating_count desc;',
             {
                 headers: {
-                    'Client-ID': config.igdbClientId,
+                    'Client-ID': IGDB_CLIENT_ID,
                     Authorization: `Bearer ${await getIgdbToken()}`,
                 },
             },
@@ -61,7 +61,7 @@ export const searchSuggestionsFromIgdb = async (
                 'sort total_rating_count desc; limit 9;',
             {
                 headers: {
-                    'Client-ID': config.igdbClientId,
+                    'Client-ID': IGDB_CLIENT_ID,
                     Authorization: `Bearer ${await getIgdbToken()}`,
                 },
             },
@@ -94,7 +94,7 @@ export const fetchTopGamesFromIgdb = async (): Promise<Game[]> => {
                 'sort total_rating desc; limit 6;',
             {
                 headers: {
-                    'Client-ID': config.igdbClientId,
+                    'Client-ID': IGDB_CLIENT_ID,
                     Authorization: `Bearer ${await getIgdbToken()}`,
                 },
             },
